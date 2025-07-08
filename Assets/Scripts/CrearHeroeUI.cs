@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Networking;
+using System.Collections;
 
 public class CrearHeroeUI : MonoBehaviour
 {
@@ -19,6 +21,11 @@ public class CrearHeroeUI : MonoBehaviour
 
     void CrearHeroe()
     {
+        StartCoroutine(EnviarHeroe());
+    }
+
+    IEnumerator EnviarHeroe()
+    {
         string nombre = inputNombre.text;
         string rol = inputRol.text;
         string dificultad = dropdownDificultad.options[dropdownDificultad.value].text;
@@ -27,10 +34,25 @@ public class CrearHeroeUI : MonoBehaviour
         string h3 = inputH3.text;
         string ult = inputUlt.text;
 
-        Debug.Log("🛠️ Héroe creado:");
-        Debug.Log($"Nombre: {nombre}");
-        Debug.Log($"Rol: {rol}");
-        Debug.Log($"Dificultad: {dificultad}");
-        Debug.Log($"Habilidades: {h1}, {h2}, {h3}, {ult}");
+        WWWForm form = new WWWForm();
+        form.AddField("nombre_heroe", nombre);
+        form.AddField("rol", rol);
+        form.AddField("dificultad", dificultad);
+        form.AddField("habilidad1", h1);
+        form.AddField("habilidad2", h2);
+        form.AddField("habilidad3", h3);
+        form.AddField("ultimate", ult);
+
+        UnityWebRequest www = UnityWebRequest.Post("http://localhost/CRUD/heroes/create_heroes.php", form);
+        yield return www.SendWebRequest();
+
+        if (www.result == UnityWebRequest.Result.Success)
+        {
+            Debug.Log("Héroe insertado: " + www.downloadHandler.text);
+        }
+        else
+        {
+            Debug.LogError("Error al insertar: " + www.error);
+        }
     }
 }
