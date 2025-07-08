@@ -1,5 +1,7 @@
 <?php
-$conn = new mysqli("localhost", "root", "123456", "dotita_db");
+// sin contraseña y con puerto 3307
+$conn = new mysqli("localhost", "root", "", "dotita_db", 3307);
+
 if ($conn->connect_error) die("Conexión fallida: " . $conn->connect_error);
 
 // Obtener los datos del formulario

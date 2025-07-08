@@ -1,22 +1,21 @@
-using System;
 using UnityEngine;
 
 public static class JsonHelper
 {
     public static T[] FromJson<T>(string json)
     {
-        Wrapper<T> wrapper = JsonUtility.FromJson<Wrapper<T>>(FixJson(json));
-        return wrapper.items;
+        Wrapper<T> wrapper = JsonUtility.FromJson<Wrapper<T>>(json);
+        return wrapper.Items;
     }
 
-    static string FixJson(string value)
+    public static string FixJson(string value)
     {
-        return "{\"items\":" + value + "}";
+        return "{\"Items\":" + value + "}";
     }
 
-    [Serializable]
+    [System.Serializable]
     private class Wrapper<T>
     {
-        public T[] items;
+        public T[] Items;
     }
 }
